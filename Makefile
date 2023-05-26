@@ -29,8 +29,9 @@ ifneq ($(HAS_PPL),)
 endif
 	(cd avoct; $(MAKE) MPQ D)
 ifneq ($(HAS_GLPK),)
-	(cd fppol; $(MAKE) all) 
+	(cd fppol; $(MAKE) all)
 endif
+	(cd parallelotopes; $(MAKE) all)
 
 cxx:
 	(cd apronxx; $(MAKE))
@@ -50,7 +51,7 @@ ifneq ($(HAS_PPL),)
 endif
 	(cd avoct; $(MAKE) mlMPQ mlD)
 ifneq ($(HAS_GLPK),)
-	(cd fppol; $(MAKE) allml) 
+	(cd fppol; $(MAKE) allml)
 endif
 
 aprontop:
@@ -108,7 +109,7 @@ endif
 ifneq ($(HAS_GLPK),)
 OCAMLFIND_FILES += \
 	$(patsubst %,fppol/%, fpp.mli fpp.cmi fpp.cmx) \
-	$(patsubst %,fppol/%, $(subst xxx,fppD, $(OCAMLFIND_PROTO)))  
+	$(patsubst %,fppol/%, $(subst xxx,fppD, $(OCAMLFIND_PROTO)))
 endif
 ifneq ($(OCAMLPACK),)
 OCAMLFIND_FILES += mlapronidl/apron_ocamldoc.mli
@@ -127,7 +128,7 @@ endif
 	$(patsubst %,avoct/%, avo.cmti avo.cmt)
 ifneq ($(HAS_GLPK),)
 OCAMLFIND_FILES += \
-	$(patsubst %,fppol/%, fpp.cmti fpp.cmt) 
+	$(patsubst %,fppol/%, fpp.cmti fpp.cmt)
 endif
 endif
 
@@ -145,7 +146,7 @@ ifneq ($(HAS_PPL),)
 endif
 	(cd avoct; $(MAKE) install)
 ifneq ($(HAS_GLPK),)
-	(cd fppol; $(MAKE) install) 
+	(cd fppol; $(MAKE) install)
 endif
 ifneq ($(HAS_OCAML),)
 ifeq ($(OCAMLFIND),)
@@ -198,10 +199,11 @@ clean:
 	(cd newpolka; $(MAKE) clean)
 	(cd octagons; $(MAKE) clean)
 	(cd taylor1plus; $(MAKE) clean)
+	(cd parallelotopes; $(MAKE) clean)
 	(cd ppl; $(MAKE) clean)
 	(cd products; $(MAKE) clean)
 	(cd avoct; $(MAKE) clean)
-	(cd fppol; $(MAKE) clean) 
+	(cd fppol; $(MAKE) clean)
 	(cd apronxx; $(MAKE) clean)
 	(cd examples; $(MAKE) clean)
 	(cd test; $(MAKE) clean)
@@ -221,11 +223,12 @@ uninstall:
 	(cd newpolka; $(MAKE) uninstall)
 	(cd octagons; $(MAKE) uninstall)
 	(cd taylor1plus; $(MAKE) uninstall)
+	(cd parallelotopes; $(MAKE) uninstall)
 	(cd examples; $(MAKE) uninstall)
 	(cd ppl; $(MAKE) uninstall)
 	(cd products; $(MAKE) uninstall)
 	(cd avoct; $(MAKE) uninstall)
-	(cd fppol; $(MAKE) uninstall) 
+	(cd fppol; $(MAKE) uninstall)
 	(cd apronxx; $(MAKE) uninstall)
 	(cd japron; $(MAKE) uninstall)
 	(cd $(APRON_BIN); rm -f apron*)
@@ -249,7 +252,7 @@ endif
 
 PKG  = $(PKGNAME)-$(VERSION_STR)
 PKGFILES = Makefile README README.windows README.mac AUTHORS COPYING Makefile.config.model Changes configure vars.mk ocamlpack
-PKGDIRS  = apron num itv octagons box newpolka taylor1plus ppl products avoct fppol mlapronidl examples test apronxx japron
+PKGDIRS  = apron num itv octagons box newpolka taylor1plus parallelotopes ppl products avoct fppol mlapronidl examples test apronxx japron
 
 dist:
 	$(MAKE) all

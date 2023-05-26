@@ -1,0 +1,157 @@
+# README
+#
+# Installation documentation
+#
+# APRON Library / Parallelotope Domain
+#
+# Copyright (C) Gianluca Amato and Francesca Scozzari 2023
+
+# This file is part of the APRON Library, released under LGPL license
+# with an exception allowing the redistribution of statically linked
+# executables.
+#
+# Please read the COPYING file packaged in the distribution
+
+This package is a implementation of the parallelotope abstract domain that
+conforms to the APRON interface.
+It includes both a C and a OCaml interface.
+
+
+DOCUMENTATION
+=============
+
+This file presents installation instructions only.
+Please see the ptope_doc.html file for how to use the parallelotope library.
+Actually, the ptope_doc.html documents only those features that are
+specific to the parallelotope implementation. For other features, you should read
+the generic APRON documentation.
+
+
+EASY START
+==========
+
+The main APRON makefile (likely ../Makefile)  should automatically build
+and install the parallelotope library.
+Actually, it only builds the most useful parts: the C libraries using GMP
+integers (libptopeZg.a) and using doubles (libptopeFd.a) as well as the OCaml
+wrapper (ptope.cm(x)a) (provided HAS_OCAML has been defined in Makefile.config).
+
+The rest documents some extra things you can do by calling directly the
+Makefile in the parallelotope directory.
+
+
+C LIBRARY
+=========
+
+Requirements:
+ * the APRON library
+ * the ITV and NUM libraries
+ * the MPFR and GMP libraries
+
+Provided libraries.
+Several versions of the parallelotope domain are provided, based on different
+internal representation for numbers.
+They are distinguished by a two-letter "numeric suffix":
+ * Il  : integers with a plain "long int" representation
+ * Ill : integers with a "long long int" representation
+ * MPZ : arbitrary precision integers using GMP
+ * Rl  : rationals with a "long int" representation
+ * Rll : rationals with a "long long int" representation
+ * MPQ : arbitrary precision rationals using GMP
+ * D   : reals with a "double" representation
+ * Dl    reals with a "long double" representation
+
+Given the numeric suffix Xx, the library is named libptopeXx.a.
+
+How to compile (given a numeric suffix Xx):
+
+ 1) the parent directory must contain a Makefile.config file
+
+ 2) make sure the Makefile.config has the following variables defined:
+    PTOPE_PREFIX  where to install the parallelotope library
+    APRON_PREFIX  where the apron module from APRON is installed
+    NUM_PREFIX    where the num module from APRON is installed
+    GMP_PREFIX    where the GMP library is installed
+
+ 3) "make Xx"
+
+ 4) "make install" will install the compiled C library(ies) in
+     PTOPE_PREFIX/lib, and the headers in PTOPE_PREFIX/include/ptope
+
+
+Note that "make all" is a shortcut for "make Il Ill ... Dl", that is,
+it builds all C libraries.
+
+
+SELF-TEST
+=========
+
+The distribution contains a self-testing utility.
+Given the numeric suffix Xx, the utility is names ptopetestXx
+
+Requirements:
+ * All of the above
+ * the newpolka module for APRON
+
+How to use (given a numeric suffix Xx):
+
+ 1) make sure the Makefile.config file has the POLKA_PREFIX variable defined
+
+ 2) type "make ptopetestXx"
+
+ 3) run with "./ptopetestXx"
+
+The self-test compares the result on the parallelotope domain and the polyhedron
+domain to check for soundness.
+It generates random constraints, and so, its result vary from run to run.
+
+For each test, a character is displayed. Generally, '*' means a result as good
+as in polyhedra, 'x' means an optimal parallelotope result, 'o' means an empty
+result, '=', '<' and '>' compare the precision of two parallelotope transfer
+functions and '.' just means a correct result.
+
+The test should not produce any error. Please report any error encountered!
+
+
+
+OCAML LIBRARY
+=============
+
+Requirements:
+ * OCaml 3.09
+ * the GMP and MPFR libraries
+ * the APRON library (including the apron, num, itv, mlgmpidl, and mlapronidl
+   modules)
+
+How to compile the library:
+
+ 1) make sure the Makefile.config has the following variables defined:
+    CAML_PREFIX        where the standard OCaml distribution is installed
+                       (without the /bin/ocaml suffix)
+    MLAPRONIDL_PREFIX  where the OCaml binding for APRON is installed
+    MLGMPIDL_PREFIX    where the OCaml binding for GMP from APRON is installed
+
+ 2) "make ml"
+
+ 3) "make install" will install the OCaml module(s) in PTOPE_PREFIX/lib
+
+The library to link with is called ptope.cma, for byte-code, and ptope.cmxa
+for native code. The corresponding module is called PTope.
+There is no numeric suffix here: the OCaml wrapper is independent of the
+number representation chosen.
+
+When building OCaml programs, you must link with both:
+- the generic OCaml library ptope.cma or ptope.cmxa
+- the C parallelotope library with the desired suffix.
+and all the apron & gmp libraries.
+See mltest.ml for an example.
+
+Top-level & byte-code runtime can be compiling using "make mlXx".
+Here, you must tell with numeric suffix "Xx" you wish to use.
+"make install" will install them in PTOPE_PREFIX/bin.
+
+
+CLEANING
+========
+
+"make clean" will delete all object files, including auto-generated sources.
